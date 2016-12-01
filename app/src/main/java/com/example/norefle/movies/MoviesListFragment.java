@@ -8,13 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class MoviesListFragment extends Fragment {
+public class MoviesListFragment
+        extends Fragment
+        implements MoviesRequester.Subscriber {
     private PostersAdapter posterAdapter;
+    private MoviesRequester requestTask;
 
     public MoviesListFragment() {
-        // Required empty public constructor
+        requestTask = new MoviesRequester(this);
     }
 
     @Override
@@ -25,28 +30,24 @@ public class MoviesListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final Uri[] images = {
-                Uri.parse("http://contentmarketinginstitute.com/wp-content/uploads/2015/08/original-jaws-poster-image-1A.png"),
-                Uri.parse("http://graphicdesignjunction.com/wp-content/uploads/2011/12/grey-movie-poster.jpg"),
-                Uri.parse("http://thumbs1.ebaystatic.com/images/g/pw4AAOSw4shX5zOd/s-l225.jpg"),
-                Uri.parse("https://67.media.tumblr.com/f5e67c90ac9cec324ab80790088152e9/tumblr_of2srkrLLt1vzqmg1o1_400.gif"),
-                Uri.parse("http://contentmarketinginstitute.com/wp-content/uploads/2015/08/original-jaws-poster-image-1A.png"),
-                Uri.parse("http://graphicdesignjunction.com/wp-content/uploads/2011/12/grey-movie-poster.jpg"),
-                Uri.parse("http://thumbs1.ebaystatic.com/images/g/pw4AAOSw4shX5zOd/s-l225.jpg"),
-                Uri.parse("https://67.media.tumblr.com/f5e67c90ac9cec324ab80790088152e9/tumblr_of2srkrLLt1vzqmg1o1_400.gif"),
-                Uri.parse("http://contentmarketinginstitute.com/wp-content/uploads/2015/08/original-jaws-poster-image-1A.png"),
-                Uri.parse("http://graphicdesignjunction.com/wp-content/uploads/2011/12/grey-movie-poster.jpg"),
-                Uri.parse("http://thumbs1.ebaystatic.com/images/g/pw4AAOSw4shX5zOd/s-l225.jpg"),
-                Uri.parse("https://67.media.tumblr.com/f5e67c90ac9cec324ab80790088152e9/tumblr_of2srkrLLt1vzqmg1o1_400.gif")
-
-        };
-
         View root = inflater.inflate(R.layout.fragment_movies_list, container, false);
 
-        posterAdapter = new PostersAdapter(getActivity(), Arrays.asList(images));
+        posterAdapter = new PostersAdapter(getActivity(), new ArrayList<Movie>());
         GridView movies = (GridView) root.findViewById(R.id.movies_collection_view);
         movies.setAdapter(posterAdapter);
 
         return root;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        requestTask.execute(Uri.parse("https://api.themoviedb.org/3/movie/top_rated?api_key=&language=en-US&page=1"));
+    }
+
+    @Override
+    public void accept(List<Movie> movies) {
+        posterAdapter.addAll(movies);
     }
 }

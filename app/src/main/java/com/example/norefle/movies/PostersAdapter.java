@@ -12,20 +12,22 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-class PostersAdapter extends ArrayAdapter<Uri> {
-    public PostersAdapter(Activity context, List<Uri> posters) {
+class PostersAdapter extends ArrayAdapter<Movie> {
+    private static final String BASE_URL = "http://image.tmdb.org/t/p/w185";
+    PostersAdapter(Activity context, List<Movie> posters) {
         super(context, 0, posters);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Uri posterUri = getItem(position);
+        Movie movie = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
+        final Uri address = Uri.parse(BASE_URL + movie.poster);
         ImageView posterImage = (ImageView) convertView.findViewById(R.id.movie_poster_image);
-        Picasso.with(getContext()).load(posterUri).into(posterImage);
+        Picasso.with(getContext()).load(address).into(posterImage);
 
         return convertView;
     }
