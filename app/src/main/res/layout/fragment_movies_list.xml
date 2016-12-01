@@ -2,11 +2,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoviesListFragment">
+    tools:context=".MoviesListFragment"
+    android:padding="0dp"
+    android:layout_margin="0dp">
 
-    <ListView
-        android:id="@+id/movies_list_view"
+    <GridView
+        android:id="@+id/movies_collection_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layoutDirection="ltr"
+        android:numColumns="2"
+        android:padding="0dp"
+        android:layout_margin="0dp" />
 
 </FrameLayout>
