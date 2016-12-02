@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MoviesListFragment
@@ -36,14 +35,14 @@ public class MoviesListFragment
         GridView movies = (GridView) root.findViewById(R.id.movies_collection_view);
         movies.setAdapter(posterAdapter);
 
+        requestTask.execute(
+                Uri.parse("https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1")
+                        .buildUpon()
+                        .appendQueryParameter("api_key", BuildConfig.MOVIES_DB_API_KEY)
+                        .build()
+        );
+
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        requestTask.execute(Uri.parse("https://api.themoviedb.org/3/movie/top_rated?api_key=&language=en-US&page=1"));
     }
 
     @Override
