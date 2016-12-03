@@ -1,23 +1,20 @@
 package com.example.norefle.movies;
 
-import android.content.Context;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity {
+
+    public static final String ARGUMENT_KEY = "Movie";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.activity_main, new MoviesListFragment())
+                    .add(R.id.activity_movie_detail, MovieDetailFragment.newInstance(getIntent().getSerializableExtra(ARGUMENT_KEY)))
                     .commit();
         }
     }

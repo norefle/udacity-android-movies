@@ -13,7 +13,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 class PostersAdapter extends ArrayAdapter<Movie> {
+
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w185";
+
     PostersAdapter(Activity context, List<Movie> posters) {
         super(context, 0, posters);
     }

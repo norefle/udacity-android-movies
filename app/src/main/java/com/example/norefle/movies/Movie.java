@@ -1,27 +1,31 @@
 package com.example.norefle.movies;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.Serializable;
+import java.util.Date;
 
-class Movie {
+class Movie implements Serializable {
+    final int id;
     final String title;
     final String poster;
+    final Date release;
+    final String description;
     final double popularity;
     final double rate;
 
-    Movie(String title, String poster, double popularity, double rate) {
+    Movie(int id,
+          String title,
+          String description,
+          Date release,
+          String poster,
+          double popularity,
+          double rate) {
+
+        this.id = id;
         this.title = title;
+        this. description = description;
+        this.release = release;
         this.poster = poster;
         this.popularity = popularity;
         this.rate = rate;
-    }
-
-    static Movie parse(JSONObject document) throws JSONException {
-        return new Movie(
-                document.getString("original_title"),
-                document.getString("poster_path"),
-                document.getDouble("popularity"),
-                document.getDouble("vote_average")
-        );
     }
 }

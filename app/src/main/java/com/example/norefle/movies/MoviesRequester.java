@@ -14,11 +14,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
-    public interface Subscriber {
+    interface Subscriber {
         void accept(List<Movie> movies);
     }
 
@@ -66,8 +67,10 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
 
                 result.addAll(parse(buffer.toString()));
             }
-        } catch (IOException | JSONException e) {
-            Log.e(getClass().getName(), "Failed to load or parse movies:" + e.getMessage());
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "Failed to request movies:" + e.getMessage());
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "Failed to parse response with movies:" + e.getMessage());
         }
 
         return result;
@@ -78,9 +81,21 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
         final JSONObject document = new JSONObject(jsonAsString);
         final JSONArray movies = document.getJSONArray("results");
         for (int index = 0; index < movies.length(); ++index) {
-            result.add(Movie.parse(movies.getJSONObject(index)));
+            result.add(extractMovie(movies.getJSONObject(index)));
         }
 
         return result;
+    }
+
+    private Movie extractMovie(JSONObject document) throws JSONException {
+        return new Movie(
+                document.getInt("id"),
+                document.getString("original_title"),
+                document.getString("overview"),
+                Date.valueOf(document.getString("release_date")),
+                document.getString("poster_path"),
+                document.getDouble("popularity"),
+                document.getDouble("vote_average")
+        );
     }
 }
