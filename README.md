@@ -16,3 +16,4 @@ Where you_api_key should be replaced with the your API key provided by the movie
 # Current state
 
 ![Main activity](screenshots/main-view.png)
+![Detailed activity](screenshots/detailed-view.png)
