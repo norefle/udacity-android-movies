@@ -20,19 +20,33 @@ import java.util.List;
 
 class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
     interface Subscriber {
-        void accept(List<Movie> movies);
+        void accept(List<Movie> movies, int current, int total);
     }
 
-    private Subscriber subscriber;
+    private static final String RESULTS_KEY = "results";
+    private static final String PAGES_KEY = "total_pages";
+    private static final String ID_KEY = "id";
+    private static final String TITLE_KEY = "original_title";
+    private static final String OVERVIEW_KEY = "overview";
+    private static final String RELEASE_KEY = "release_date";
+    private static final String POSTER_KEY = "poster_path";
+    private static final String POPULARITY_KEY = "popularity";
+    private static final String VOTE_KEY = "vote_average";
 
-    MoviesRequester(Subscriber subscriber) {
+    private final Subscriber subscriber;
+    private final int currentPage;
+    private int pagesTotal;
+
+    MoviesRequester(Subscriber subscriber, int currentPage) {
         this.subscriber = subscriber;
+        this.currentPage = currentPage;
+        this.pagesTotal = 0;
     }
 
     @Override
     protected void onPostExecute(List<Movie> movies) {
         super.onPostExecute(movies);
-        subscriber.accept(movies);
+        subscriber.accept(movies, currentPage, pagesTotal);
     }
 
     @Override
@@ -48,7 +62,7 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
 
                 // Read the input stream into a String
                 InputStream inputStream = request.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
                     return result;
@@ -57,7 +71,7 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -79,7 +93,8 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
     private List<Movie> parse(String jsonAsString) throws JSONException {
         List<Movie> result = new ArrayList<>();
         final JSONObject document = new JSONObject(jsonAsString);
-        final JSONArray movies = document.getJSONArray("results");
+        final JSONArray movies = document.getJSONArray(RESULTS_KEY);
+        pagesTotal = document.getInt(PAGES_KEY);
         for (int index = 0; index < movies.length(); ++index) {
             result.add(extractMovie(movies.getJSONObject(index)));
         }
@@ -89,13 +104,13 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
 
     private Movie extractMovie(JSONObject document) throws JSONException {
         return new Movie(
-                document.getInt("id"),
-                document.getString("original_title"),
-                document.getString("overview"),
-                Date.valueOf(document.getString("release_date")),
-                document.getString("poster_path"),
-                document.getDouble("popularity"),
-                document.getDouble("vote_average")
+                document.getInt(ID_KEY),
+                document.getString(TITLE_KEY),
+                document.getString(OVERVIEW_KEY),
+                Date.valueOf(document.getString(RELEASE_KEY)),
+                document.getString(POSTER_KEY),
+                document.getDouble(POPULARITY_KEY),
+                document.getDouble(VOTE_KEY)
         );
     }
 }

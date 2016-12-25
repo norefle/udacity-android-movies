@@ -20,7 +20,6 @@ public class MoviesListFragment
     private MoviesRequester requestTask;
 
     public MoviesListFragment() {
-        requestTask = new MoviesRequester(this);
     }
 
     @Override
@@ -34,19 +33,17 @@ public class MoviesListFragment
 
         movies.setOnItemClickListener((adapter, view, position, l) -> showMovieInfo(position));
 
-        requestTask.execute(
-                Uri.parse("https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1")
-                        .buildUpon()
-                        .appendQueryParameter("api_key", BuildConfig.MOVIES_DB_API_KEY)
-                        .build()
-        );
+        requestMovies(1);
 
         return root;
     }
 
     @Override
-    public void accept(List<Movie> movies) {
+    public void accept(List<Movie> movies, int current, int total) {
         posterAdapter.addAll(movies);
+        if (current < total) {
+            requestMovies(current + 1);
+        }
     }
 
     private void showMovieInfo(int position) {
@@ -55,5 +52,16 @@ public class MoviesListFragment
         intent.putExtra(MovieDetailActivity.ARGUMENT_KEY, movie);
 
         startActivity(intent);
+    }
+
+    private void requestMovies(int nextPage) {
+        requestTask = new MoviesRequester(this, nextPage);
+        requestTask.execute(
+                Uri.parse("https://api.themoviedb.org/3/movie/top_rated?language=en-US")
+                        .buildUpon()
+                        .appendQueryParameter("api_key", BuildConfig.MOVIES_DB_API_KEY)
+                        .appendQueryParameter("page", Integer.toString(nextPage))
+                        .build()
+        );
     }
 }

@@ -2,6 +2,7 @@ package com.example.norefle.movies;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +22,17 @@ class PostersAdapter extends ArrayAdapter<Movie> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Movie movie = getItem(position);
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
-        final Uri address = Uri.parse(BASE_URL + movie.poster);
-        ImageView posterImage = (ImageView) convertView.findViewById(R.id.movie_poster_image);
-        Picasso.with(getContext()).load(address).into(posterImage);
+        Movie movie = getItem(position);
+        if (movie != null) {
+            final Uri address = Uri.parse(BASE_URL + movie.poster);
+            ImageView posterImage = (ImageView) convertView.findViewById(R.id.movie_poster_image);
+            Picasso.with(getContext()).load(address).into(posterImage);
+        }
 
         return convertView;
     }
