@@ -32,13 +32,6 @@
                 android:gravity="top|center_horizontal" />
 
             <TextView
-                android:text="120 min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/detailed_length"
-                android:gravity="top|center_horizontal" />
-
-            <TextView
                 android:text="5.5 / 10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
