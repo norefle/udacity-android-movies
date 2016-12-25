@@ -1,9 +1,13 @@
 package com.example.norefle.movies;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +58,18 @@ public class MoviesListFragment
         startActivity(intent);
     }
 
+    private boolean online() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     private void requestMovies(int nextPage) {
+        if (!online()) {
+            Log.w(getClass().getName(), "There is no network connection to begin with.");
+            return;
+        }
+
         requestTask = new MoviesRequester(this, nextPage);
         requestTask.execute(
                 Uri.parse("https://api.themoviedb.org/3/movie/top_rated?language=en-US")
