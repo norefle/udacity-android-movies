@@ -1,0 +1,9 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:id="@+id/sort_oder_list"
+        android:defaultValue="@string/by_popularity_sort"
+        android:title="@string/sort_settings_menu"
+        android:entries="@array/sort_options"
+        android:entryValues="@array/sort_options"
+        android:key="@string/sort_settings_menu" />
+</PreferenceScreen>

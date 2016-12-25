@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Movies</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="sort_settings_menu">Sort order</string>
+    <string name="by_popularity_sort">By popularity</string>
+    <string name="by_votes_sort">By votes</string>
+    <string-array name="sort_options">
+        <item>@string/by_popularity_sort</item>
+        <item>@string/by_votes_sort</item>
+    </string-array>
 </resources>

@@ -103,11 +103,12 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
     }
 
     private Movie extractMovie(JSONObject document) throws JSONException {
+        final String releaseDate = document.getString(RELEASE_KEY);
         return new Movie(
                 document.getInt(ID_KEY),
                 document.getString(TITLE_KEY),
                 document.getString(OVERVIEW_KEY),
-                Date.valueOf(document.getString(RELEASE_KEY)),
+                releaseDate.isEmpty() ? Date.valueOf("1970-01-01") : Date.valueOf(releaseDate),
                 document.getString(POSTER_KEY),
                 document.getDouble(POPULARITY_KEY),
                 document.getDouble(VOTE_KEY)
