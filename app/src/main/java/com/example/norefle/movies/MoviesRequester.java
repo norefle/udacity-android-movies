@@ -32,6 +32,7 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
     private static final String POSTER_KEY = "poster_path";
     private static final String POPULARITY_KEY = "popularity";
     private static final String VOTE_KEY = "vote_average";
+    private static final String LOG_TAG = MoviesRequester.class.getName();
 
     private final Subscriber subscriber;
     private final int currentPage;
@@ -82,9 +83,11 @@ class MoviesRequester extends AsyncTask<Uri, Void, List<Movie>> {
                 result.addAll(parse(buffer.toString()));
             }
         } catch (IOException e) {
-            Log.e(getClass().getName(), "Failed to request movies:" + e.getMessage());
+            Log.e(LOG_TAG, "Failed to request movies:", e);
         } catch (JSONException e) {
-            Log.e(getClass().getName(), "Failed to parse response with movies:" + e.getMessage());
+            Log.e(LOG_TAG, "Failed to parse a movie response:", e);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Unexpected error.", e);
         }
 
         return result;

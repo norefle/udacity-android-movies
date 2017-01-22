@@ -98,16 +98,20 @@ public class MoviesListFragment
             return;
         }
 
-        requestTask = new MoviesRequester(this, nextPage);
-        requestTask.execute(
-                Uri.parse(BASIC_URL)
-                        .buildUpon()
-                        .appendPath(byPopularity ? POPULAR_KEY : TOP_RATED_KEY)
-                        .appendQueryParameter(LANGUAGE_KEY, LANGUAGE_VALUE)
-                        .appendQueryParameter(API_KEY, BuildConfig.MOVIES_DB_API_KEY)
-                        .appendQueryParameter(PAGE_KEY, Integer.toString(nextPage))
-                        .build()
-        );
+        try {
+            requestTask = new MoviesRequester(this, nextPage);
+            requestTask.execute(
+                    Uri.parse(BASIC_URL)
+                            .buildUpon()
+                            .appendPath(byPopularity ? POPULAR_KEY : TOP_RATED_KEY)
+                            .appendQueryParameter(LANGUAGE_KEY, LANGUAGE_VALUE)
+                            .appendQueryParameter(API_KEY, BuildConfig.MOVIES_DB_API_KEY)
+                            .appendQueryParameter(PAGE_KEY, Integer.toString(nextPage))
+                            .build()
+            );
+        } catch (Exception e) {
+            Log.e(getClass().getName(), "Failed to execute background task.", e);
+        }
     }
 
     @Override
