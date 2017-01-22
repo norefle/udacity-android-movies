@@ -1,6 +1,7 @@
 package com.example.norefle.movies;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -27,11 +28,15 @@ class PostersAdapter extends ArrayAdapter<Movie> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
 
-        Movie movie = getItem(position);
+        final Movie movie = getItem(position);
         if (movie != null) {
             final Uri address = Uri.parse(BASE_URL + movie.poster);
             ImageView posterImage = (ImageView) convertView.findViewById(R.id.movie_poster_image);
-            Picasso.with(getContext()).load(address).into(posterImage);
+            Picasso.with(getContext())
+                .load(address)
+                .placeholder(R.mipmap.poster_placeholder)
+                .error(R.mipmap.poster_error)
+                .into(posterImage);
         }
 
         return convertView;
