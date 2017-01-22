@@ -40,10 +40,21 @@ public class MovieDetailFragment extends Fragment {
         description.setText(movie.description);
 
         TextView releaseDate = (TextView) root.findViewById(R.id.detailed_year);
-        releaseDate.setText(Long.toString(1900 + movie.release.getYear()));
+        releaseDate.setText(
+            String.format(
+                getString(R.string.year_of_release_pattern),
+                1900 + movie.release.getYear()
+            )
+        );
 
         TextView rating = (TextView) root.findViewById(R.id.detailed_rating);
-        rating.setText(Double.toString(movie.rate) + " / 10");
+        rating.setText(
+            String.format(
+                getString(R.string.rating_pattern),
+                movie.rate,
+                10.0
+            )
+        );
 
         getActivity().setTitle(movie.title);
 
